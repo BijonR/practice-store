@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Checkout — Ledger & Co{% endblock %}
+{% block content %}
+
+<h1 style="margin-top: 32px;">Checkout</h1>
+<p style="color: var(--ink-soft);">This is a mock checkout for practice purposes — no real payment is processed.</p>
+
+<table>
+  <thead><tr><th>Product</th><th>Qty</th><th>Subtotal</th></tr></thead>
+  <tbody>
+    {% for item in cart.items %}
+    <tr>
+      <td>{{ item.product.name }}</td>
+      <td>{{ item.quantity }}</td>
+      <td class="mono">${{ '%.2f'|format(item.product.price * item.quantity) }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<div style="text-align: right; margin: 20px 0;">
+  <div class="mono" style="font-size: 20px;">Total: ${{ '%.2f'|format(total) }}</div>
+</div>
+
+<form method="post">
+  <div class="form-card" style="margin: 0 0 32px;">
+    <div class="form-group"><label>Name on order (mock)</label><input type="text" value="{{ current_user.email }}" disabled></div>
+    <div class="form-group"><label>Payment method (mock)</label><input type="text" value="Test card ending 4242" disabled></div>
+    <button type="submit" class="btn btn-primary" style="width: 100%;">Place order</button>
+  </div>
+</form>
+
+{% endblock %}

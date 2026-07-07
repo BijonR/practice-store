@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Ledger & Co — Home{% endblock %}
+{% block content %}
+
+<div class="hero" style="margin-left: -24px; margin-right: -24px; padding-left: 24px; padding-right: 24px;">
+  <h1>Every item, catalogued.</h1>
+  <p>A small practice store where every product carries its own record number — built to learn how data moves through a real storefront.</p>
+</div>
+
+<div class="category-pills">
+  <a href="{{ url_for('storefront.product_list') }}" class="{{ 'active' if not request.args.get('category') else '' }}">All</a>
+  {% for cat in categories %}
+    <a href="{{ url_for('storefront.product_list', category=cat.slug) }}">{{ cat.name }}</a>
+  {% endfor %}
+</div>
+
+<div class="section-title">
+  <h2>Recently added</h2>
+  <span class="count">{{ featured|length }} items</span>
+</div>
+
+<div class="product-grid">
+  {% for product in featured %}
+    {% include "_product_card.html" %}
+  {% endfor %}
+</div>
+
+{% endblock %}

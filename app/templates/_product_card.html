@@ -1,0 +1,13 @@
+<a href="{{ url_for('storefront.product_detail', product_id=product.id) }}" style="text-decoration:none; color:inherit;">
+  <div class="product-card">
+    <img src="{{ product.image_url or 'https://placehold.co/400x300/1C2430/F6F3EC?text=No+Image' }}" alt="{{ product.name }}">
+    <div class="body">
+      <div class="sku">SKU #{{ '%04d'|format(product.id) }}</div>
+      <div class="name">{{ product.name }}</div>
+      <div class="price">${{ '%.2f'|format(product.price) }}</div>
+      {% if product.inventory and product.inventory.stock_qty <= product.inventory.reorder_level %}
+        <div class="stock-low">Low stock — {{ product.inventory.stock_qty }} left</div>
+      {% endif %}
+    </div>
+  </div>
+</a>

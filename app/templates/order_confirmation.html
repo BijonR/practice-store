@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Order confirmed — Ledger & Co{% endblock %}
+{% block content %}
+
+<div style="max-width: 480px; margin: 60px auto; text-align: center;">
+  <h1>Order #{{ '%05d'|format(order.id) }} confirmed</h1>
+  <p class="mono" style="font-size: 24px; margin: 16px 0;">${{ '%.2f'|format(order.total_amount) }}</p>
+  <p style="color: var(--ink-soft);">Status: {{ order.status }}</p>
+  <a href="{{ url_for('storefront.product_list') }}" class="btn btn-outline" style="margin-top: 20px;">Continue shopping</a>
+</div>
+
+{% endblock %}

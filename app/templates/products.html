@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Shop — Ledger & Co{% endblock %}
+{% block content %}
+
+<div class="section-title">
+  <h2>{% if search_q %}Results for "{{ search_q }}"{% else %}All products{% endif %}</h2>
+  <span class="count">{{ pagination.total }} items</span>
+</div>
+
+<div class="category-pills">
+  <a href="{{ url_for('storefront.product_list') }}" class="{{ 'active' if not current_category else '' }}">All</a>
+  {% for cat in categories %}
+    <a href="{{ url_for('storefront.product_list', category=cat.slug) }}" class="{{ 'active' if current_category == cat.slug else '' }}">{{ cat.name }}</a>
+  {% endfor %}
+</div>
+
+{% if products %}
+<div class="product-grid">
+  {% for product in products %}
+    {% include "_product_card.html" %}
+  {% endfor %}
+</div>
+{% else %}
+<p style="margin-top: 24px; color: var(--ink-soft);">No products found. Try a different search or category.</p>
+{% endif %}
+
+{% if pagination.pages > 1 %}
+<div style="margin: 24px 0; display: flex; gap: 8px;">
+  {% if pagination.has_prev %}
+    <a class="btn btn-outline btn-sm" href="{{ url_for('storefront.product_list', page=pagination.prev_num, category=current_category, q=search_q) }}">Previous</a>
+  {% endif %}
+  <span class="mono" style="align-self: center; font-size: 13px; color: var(--ink-soft);">Page {{ pagination.page }} of {{ pagination.pages }}</span>
+  {% if pagination.has_next %}
+    <a class="btn btn-outline btn-sm" href="{{ url_for('storefront.product_list', page=pagination.next_num, category=current_category, q=search_q) }}">Next</a>
+  {% endif %}
+</div>
+{% endif %}
+
+{% endblock %}

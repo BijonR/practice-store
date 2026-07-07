@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Your orders — Ledger & Co{% endblock %}
+{% block content %}
+
+<h1 style="margin-top: 32px;">Your orders</h1>
+
+{% if orders %}
+<table>
+  <thead><tr><th>Order</th><th>Date</th><th>Status</th><th>Total</th></tr></thead>
+  <tbody>
+    {% for order in orders %}
+    <tr>
+      <td><a href="{{ url_for('storefront.order_confirmation', order_id=order.id) }}">#{{ '%05d'|format(order.id) }}</a></td>
+      <td>{{ order.created_at.strftime('%Y-%m-%d') }}</td>
+      <td>{{ order.status }}</td>
+      <td class="mono">${{ '%.2f'|format(order.total_amount) }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p style="color: var(--ink-soft); margin-top: 20px;">No orders yet.</p>
+{% endif %}
+
+{% endblock %}

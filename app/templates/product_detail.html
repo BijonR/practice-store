@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}{{ product.name }} — Ledger & Co{% endblock %}
+{% block content %}
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 32px;">
+  <div>
+    <img src="{{ product.image_url or 'https://placehold.co/600x450/1C2430/F6F3EC?text=No+Image' }}"
+         alt="{{ product.name }}" style="width: 100%; border-radius: 6px; border: 1px solid var(--line);">
+  </div>
+  <div>
+    <div class="sku mono">SKU #{{ '%04d'|format(product.id) }} &middot; {{ product.category.name }}</div>
+    <h1 style="margin-top: 8px;">{{ product.name }}</h1>
+    <div class="price mono" style="font-size: 24px; margin: 12px 0;">${{ '%.2f'|format(product.price) }}</div>
+
+    {% if product.avg_rating %}
+      <div style="color: var(--amber); margin-bottom: 12px;">★ {{ product.avg_rating }} / 5 ({{ product.reviews|length }} reviews)</div>
+    {% endif %}
+
+    {% if product.in_stock %}
+      <span class="badge badge-ok">{{ product.inventory.stock_qty }} in stock</span>
+    {% else %}
+      <span class="badge badge-low">Out of stock</span>
+    {% endif %}
+
+    <p style="margin-top: 20px; color: var(--ink-soft);">{{ product.description or "No description provided." }}</p>
+
+    {% if current_user.is_authenticated %}
+      <form method="post" action="{{ url_for('storefront.add_to_cart', product_id=product.id) }}" style="margin-top: 20px; display: flex; gap: 10px; align-items: center;">
+        <input type="number" name="quantity" value="1" min="1" style="width: 70px; padding: 8px; border: 1px solid var(--line); border-radius: 4px;">
+        <button type="submit" class="btn btn-primary" {{ 'disabled' if not product.in_stock else '' }}>Add to cart</button>
+      </form>
+    {% else %}
+      <a href="{{ url_for('auth.login') }}" class="btn btn-primary" style="margin-top: 20px;">Log in to purchase</a>
+    {% endif %}
+  </div>
+</div>
+
+{% if product.reviews %}
+<div class="section-title"><h2>Reviews</h2></div>
+{% for review in product.reviews %}
+  <div style="border-bottom: 1px solid var(--line); padding: 14px 0;">
+    <div style="color: var(--amber);">{{ '★' * review.rating }}{{ '☆' * (5 - review.rating) }}</div>
+    <p style="margin: 6px 0 0;">{{ review.comment }}</p>
+  </div>
+{% endfor %}
+{% endif %}
+
+{% if related %}
+<div class="section-title"><h2>You might also like</h2></div>
+<div class="product-grid">
+  {% for product in related %}
+    {% include "_product_card.html" %}
+  {% endfor %}
+</div>
+{% endif %}
+
+{% endblock %}
